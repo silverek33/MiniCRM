@@ -74,8 +74,7 @@ Poniżej krótka weryfikacja projektu względem założeń projektowych:
   - Aplikacja realizuje funkcjonalność mini‑CRM (zarządzanie kontaktami i wiadomościami) w pełnym zakresie oczekiwanym dla zadania.
 
 ## Link do repozytorium
-Do zgłoszenia projektu należy dodać link do publicznego repozytorium z kodem źródłowym. W Twoim IDE remote origin to:
-`https://github.com/silverek33/MiniCRM` — upewnij się, że repo jest publiczne i zawiera cały kod projektu oraz instrukcję uruchomienia.
+https://github.com/silverek33/MiniCRM` 
 
 ## Przykładowe polecenia
 Poniżej kilka przydatnych komend do pracy z projektem (uruchamianie, migracje EF Core itp.). Zakładam, że uruchamiasz je z katalogu repozytorium nadrzędnego.
