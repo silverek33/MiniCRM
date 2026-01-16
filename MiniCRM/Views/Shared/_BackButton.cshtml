@@ -1,0 +1,5 @@
+﻿@* Reużywalny przycisk „Cofnij” – używa document.referrer i history.back(), a jak go brak, wraca do Contacts/Index *@
+@{
+    var fallback = Url.Action("Index", "Contacts")!;
+}
+<button type="button" class="btn btn-secondary" onclick="if (document.referrer) { history.back(); } else { window.location.href='@fallback'; }">← Cofnij</button>

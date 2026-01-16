@@ -1,0 +1,31 @@
+﻿@model MiniCRM.Models.EmailMessage
+@{
+    ViewData["Title"] = "Wyślij wiadomość";
+}
+<h2>@ViewData["Title"]</h2>
+<partial name="_BackButton" />
+
+<form asp-action="Create" method="post">
+    <input type="hidden" asp-for="ContactId" />
+    <div class="mb-3">
+        <label asp-for="To" class="form-label"></label>
+        <input asp-for="To" class="form-control" />
+        <span asp-validation-for="To" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Subject" class="form-label"></label>
+        <input asp-for="Subject" class="form-control" />
+        <span asp-validation-for="Subject" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Body" class="form-label"></label>
+        <textarea asp-for="Body" class="form-control" rows="6"></textarea>
+        <span asp-validation-for="Body" class="text-danger"></span>
+    </div>
+    <button class="btn btn-primary" type="submit">Wyślij</button>
+    <a asp-action="ForContact" asp-route-contactId="@Model.ContactId" class="btn btn-secondary">Anuluj</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

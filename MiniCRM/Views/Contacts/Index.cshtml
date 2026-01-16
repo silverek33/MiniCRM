@@ -1,0 +1,178 @@
+﻿@model MiniCRM.Models.ContactsIndexViewModel
+@{
+    ViewData["Title"] = "Contacts";
+
+    // Parametry sortowania
+    string lnameAsc = "lname_asc";
+    string lnameDesc = "lname_desc";
+    string companyAsc = "company_asc";
+    string companyDesc = "company_desc";
+
+    string nextLnameSort = Model.SortOrder == lnameAsc ? lnameDesc : lnameAsc;
+    string nextCompanySort = Model.SortOrder == companyAsc ? companyDesc : companyAsc;
+
+    // Paginacja
+    int currentPage = Model.Page.PageNumber;
+    int totalPages  = Model.Page.TotalPages;
+
+    int window = 3; // mniejsza „szerokość” pagera dla prostoty
+    int start = Math.Max(1, currentPage - window);
+    int end   = Math.Min(totalPages, currentPage + window);
+}
+
+<h2 class="mb-3">Contacts</h2>
+
+@if (TempData["Success"] is string successMessage)
+{
+    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+        @successMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Zamknij"></button>
+    </div>
+}
+
+<form method="get" class="row g-2 align-items-end mb-3">
+    <div class="col-12 col-sm-4">
+        <label for="search" class="form-label">Szukaj (imię, nazwisko, email)</label>
+        <input id="search" name="search" value="@Model.Search" class="form-control" />
+    </div>
+
+    <div class="col-12 col-sm-3">
+        <label for="company" class="form-label">Firma</label>
+        <input id="company" name="company" value="@Model.Company" class="form-control" />
+    </div>
+
+    <input type="hidden" name="sortOrder" value="@Model.SortOrder" />
+    <input type="hidden" name="page" value="1" />
+
+    <div class="col-12 col-sm-5 mt-2 mt-sm-0">
+        <button class="btn btn-primary me-2" type="submit">Filtruj</button>
+        <a class="btn btn-secondary" asp-action="Create">Dodaj kontakt</a>
+    </div>
+</form>
+
+@if (!Model.Page.Items.Any())
+{
+    <div class="alert alert-info">Brak wyników dla podanych filtrów.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped align-middle">
+            <thead>
+                <tr>
+                    <th style="width: 22%;">
+                        <a asp-action="Index"
+                           asp-route-search="@Model.Search"
+                           asp-route-company="@Model.Company"
+                           asp-route-sortOrder="@nextLnameSort"
+                           asp-route-page="@Model.Page.PageNumber">
+                            Nazwisko
+                            @if (Model.SortOrder == "lname_asc")
+                            { <span class="ms-1">▲</span> }
+                            else if (Model.SortOrder == "lname_desc")
+                            { <span class="ms-1">▼</span> }
+                        </a>
+                    </th>
+                    <th style="width: 18%;">Imię</th>
+                    <th style="width: 18%;">
+                        <a asp-action="Index"
+                           asp-route-search="@Model.Search"
+                           asp-route-company="@Model.Company"
+                           asp-route-sortOrder="@nextCompanySort"
+                           asp-route-page="@Model.Page.PageNumber">
+                            Firma
+                        </a>
+                    </th>
+                    <th style="width: 22%;">Email</th>
+                    <th style="width: 12%;">Telefon</th>
+                    <th class="text-end" style="width: 10%;">Akcje</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var c in Model.Page.Items)
+            {
+                <tr>
+                    <td>@c.LastName</td>
+                    <td>@c.FirstName</td>
+                    <td>@c.Company</td>
+                    <td>@c.Email</td>
+                    <td>@c.Phone</td>
+                    <td class="text-end text-nowrap">
+                        <a asp-controller="EmailMessages"
+                           asp-action="ForContact"
+                           asp-route-contactId="@c.Id"
+                           class="btn btn-sm btn-primary me-1">Wiadomości</a>
+                        <a asp-action="Edit" asp-route-id="@c.Id" class="btn btn-sm btn-warning me-1">Edytuj</a>
+                        <a asp-action="Delete" asp-route-id="@c.Id" class="btn btn-sm btn-danger">Usuń</a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+
+    @if (totalPages > 1)
+    {
+        <nav aria-label="Nawigacja stron">
+            <ul class="pagination">
+                <!-- Poprzednia strona -->
+                <li class="page-item @(currentPage > 1 ? "" : "disabled")">
+                    @if (currentPage > 1)
+                    {
+                        <a class="page-link"
+                           asp-action="Index"
+                           asp-route-search="@Model.Search"
+                           asp-route-company="@Model.Company"
+                           asp-route-sortOrder="@Model.SortOrder"
+                           asp-route-page="@(currentPage - 1)">
+                            Poprzednia
+                        </a>
+                    }
+                    else
+                    {
+                        <span class="page-link" aria-disabled="true">Poprzednia</span>
+                    }
+                </li>
+
+                <!-- Numery stron (okno) -->
+                @for (int p = start; p <= end; p++)
+                {
+                    <li class="page-item @(p == currentPage ? "active" : "")">
+                        @if (p == currentPage)
+                        {
+                            <span class="page-link">@p<span class="visually-hidden">(aktualna)</span></span>
+                        }
+                        else
+                        {
+                            <a class="page-link"
+                               asp-action="Index"
+                               asp-route-search="@Model.Search"
+                               asp-route-company="@Model.Company"
+                               asp-route-sortOrder="@Model.SortOrder"
+                               asp-route-page="@p">@p</a>
+                        }
+                    </li>
+                }
+
+                <!-- Następna strona -->
+                <li class="page-item @(currentPage < totalPages ? "" : "disabled")">
+                    @if (currentPage < totalPages)
+                    {
+                        <a class="page-link"
+                           asp-action="Index"
+                           asp-route-search="@Model.Search"
+                           asp-route-company="@Model.Company"
+                           asp-route-sortOrder="@Model.SortOrder"
+                           asp-route-page="@(currentPage + 1)">
+                            Następna
+                        </a>
+                    }
+                    else
+                    {
+                        <span class="page-link" aria-disabled="true">Następna</span>
+                    }
+                </li>
+            </ul>
+        </nav>
+    }
+}

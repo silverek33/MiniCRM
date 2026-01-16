@@ -1,0 +1,40 @@
+﻿@model MiniCRM.Models.Contact
+@{
+    ViewData["Title"] = "Edytuj kontakt";
+}
+<h2>@ViewData["Title"]</h2>
+<partial name="_BackButton" />
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+    <div class="mb-3">
+        <label asp-for="FirstName" class="form-label"></label>
+        <input asp-for="FirstName" class="form-control" />
+        <span class="text-danger" asp-validation-for="FirstName"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="LastName" class="form-label"></label>
+        <input asp-for="LastName" class="form-control" />
+        <span class="text-danger" asp-validation-for="LastName"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Company" class="form-label"></label>
+        <input asp-for="Company" class="form-control" />
+        <span class="text-danger" asp-validation-for="Company"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label"></label>
+        <input asp-for="Email" class="form-control" />
+        <span class="text-danger" asp-validation-for="Email"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Phone" class="form-label"></label>
+        <input asp-for="Phone" class="form-control" />
+        <span class="text-danger" asp-validation-for="Phone"></span>
+    </div>
+    <button class="btn btn-primary" type="submit">Zapisz</button>
+    <a asp-action="Index" class="btn btn-secondary">Anuluj</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
