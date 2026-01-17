@@ -1,0 +1,52 @@
+@model IEnumerable<MiniCRM.Models.AdminUserViewModel>
+@{
+    ViewData["Title"] = "U¿ytkownicy";
+}
+
+<h2>U¿ytkownicy (tylko tryb Development)</h2>
+
+@if (TempData["Success"] is string s)
+{
+    <div class="alert alert-success">@s</div>
+}
+@if (TempData["Error"] is string e)
+{
+    <div class="alert alert-danger">@e</div>
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Role</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var u in Model)
+    {
+        <tr>
+            <td>@u.Email</td>
+            <td>@string.Join(", ", u.Roles)</td>
+            <td>
+                @if (!u.IsAdmin)
+                {
+                    <form asp-controller="Admin" asp-action="GrantAdmin" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@u.Id" />
+                        <button class="btn btn-sm btn-success">Nadaj Admin</button>
+                    </form>
+                }
+                else
+                {
+                    <form asp-controller="Admin" asp-action="RevokeAdmin" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@u.Id" />
+                        <button class="btn btn-sm btn-danger">Cofnij Admin</button>
+                    </form>
+                }
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

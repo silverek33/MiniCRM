@@ -1,0 +1,13 @@
+@page
+@model MiniCRM.Areas.Identity.Pages.Account.LogoutModel
+@{
+    ViewData["Title"] = "Wyloguj";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form method="post">
+    <p>Czy na pewno chcesz siê wylogowaæ?</p>
+    <button type="submit" class="btn btn-danger">Tak, wyloguj</button>
+    <a asp-page="/Index" class="btn btn-secondary">Anuluj</a>
+</form>

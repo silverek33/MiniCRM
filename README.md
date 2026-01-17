@@ -32,6 +32,17 @@ Dodatkowo istnieją viewmodel'e pomocnicze dla paginacji i list.
 ## Autoryzacja i role
 Projekt używa ASP.NET Identity. Są minimum dwie role: `Admin` (pełny dostęp) i zwykły użytkownik, którego dostęp jest ograniczony do własnych rekordów (porównanie `OwnerId`).
 
+## Panel administracyjny
+Projekt zawiera prosty panel administracyjny dostępny pod adresem `/Admin/Users` służący do przeglądu użytkowników oraz nadawania i cofania roli `Admin`.
+
+- Dostęp do panelu mają wyłącznie użytkownicy z rolą `Admin`.
+- Konto administratora jest tworzone przez seeder przy starcie aplikacji (jeśli nie istnieje). Domyślne dane testowe:
+  - E‑mail: `admin@miniCRM.local`
+  - Hasło: `Admin123!`
+- Panel pozwala nadać rolę `Admin` dowolnemu użytkownikowi (lub cofnąć ją) — akcje te są wykonywane przez kontroler `AdminController`.
+
+Uwaga bezpieczeństwa: panel administracyjny i mechanizmy nadawania ról są przeznaczone do testów lokalnych. Przed wdrożeniem do środowiska produkcyjnego należy przejrzeć zabezpieczenia i ograniczyć możliwość nadawania ról (np. poprzez dodatkowe potwierdzenie, logowanie akcji, lub wyłączyć UI). 
+
 ## Baza danych i migracje
 Projekt używa EF Core (Code‑First). W repozytorium znajdują się migracje. Aby uruchomić lokalnie:
 1. Skonfiguruj connection string w `appsettings.json`.
